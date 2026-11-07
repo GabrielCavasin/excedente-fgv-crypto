@@ -1,0 +1,27 @@
+{
+  "linhas_brutas": 49546320,
+  "linhas_validas": 38741753,
+  "pct_removido_sem_ref": 0.11,
+  "duplicadas_detalhe": 145,
+  "duplicadas_cache": 144,
+  "duplicadas_conjunto": 0,
+  "fracao_intervalos_com_razao": 0.3957,
+  "usinas_cache": 1258,
+  "usinas_por_fonte": {
+    "eolica": 949,
+    "solar": 309
+  },
+  "usinas_por_uf": {
+    "BA": 450,
+    "CE": 154,
+    "PB": 42,
+    "PE": 67,
+    "PI": 185,
+    "RN": 360
+  },
+  "jan_ago_2026_nosso": 20.44,
+  "jan_ago_2026_GNR_ONS": 19.92,
+  "nov25_out26_nosso": 32.66,
+  "nov25_out26_GNR_ONS": 31.97,
+  "ano_2026_ate_out_nosso": 27.49
+}

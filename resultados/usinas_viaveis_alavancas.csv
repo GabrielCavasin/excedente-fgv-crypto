@@ -1,0 +1,23 @@
+cenario,halving,1 MW,5 MW,10 MW
+Base,sem,0,0,0
+Base,com,0,0,0
+Taxa 15%,sem,64,6,0
+Taxa 15%,com,0,0,0
+Taxa 12%,sem,110,35,3
+Taxa 12%,com,0,0,0
+S19j XP usado US$3/TH,sem,150,65,15
+S19j XP usado US$3/TH,com,0,0,0
+Infra US$125 mil/MW,sem,103,31,2
+Infra US$125 mil/MW,com,0,0,0
+Energia R$30,sem,50,4,0
+Energia R$30,com,0,0,0
+Energia R$0,sem,109,33,2
+Energia R$0,com,0,0,0
+"Câmbio 5,46",sem,2,0,0
+"Câmbio 5,46",com,0,0,0
+Hashprice +20%,sem,109,33,2
+Hashprice +20%,com,0,0,0
+Usado + infra 125 + 12%,sem,608,269,177
+Usado + infra 125 + 12%,com,148,65,15
+Usado + infra 125 + 12% + energia R$0,sem,1022,557,300
+Usado + infra 125 + 12% + energia R$0,com,309,210,149
