@@ -72,7 +72,9 @@ select{width:100%;font:inherit;font-size:13px;color:var(--ink);background:var(--
 .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .charts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
 @media (max-width:1100px){.charts{grid-template-columns:1fr}}
-.chartbox{position:relative;height:300px}
+.charts>section{min-width:0;overflow:hidden}
+.chartbox{position:relative;height:300px;width:100%;min-width:0;max-width:100%;overflow:hidden}
+.chartbox canvas{display:block;max-width:100%}
 .tablewrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -161,7 +163,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
       <section class="panel">
         <h2>Usinas viáveis a cada preço do bitcoin</h2>
         <div class="chartbox"><canvas id="cv" aria-label="Usinas viáveis por preço do bitcoin"></canvas></div>
-        <p class="note">Com as premissas ao lado. O ponto vermelho marca o preço escolhido.</p>
+        <p class="note">Com as premissas ao lado. O ponto vermelho marca o preço escolhido. O eixo de cima mostra o hashprice equivalente: é ele que paga a máquina. Se o BTC sobe, a dificuldade tende a subir junto.</p>
       </section>
     </div>
 
@@ -247,11 +249,11 @@ function calc(){
   if(window.Chart){
     if(!sc){
       sc=new Chart($("sc"),{type:"scatter",data:{datasets:[{label:"Eólica",data:[],backgroundColor:css("--wind")+"99",pointRadius:2},{label:"Solar",data:[],backgroundColor:css("--sun")+"bb",pointRadius:2},{label:"Hashprice",type:"line",data:[],borderColor:css("--bad"),borderWidth:2,pointRadius:0}]},
-        options:{animation:false,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw.n?c.raw.n+": "+fmt(c.raw.x,1)+"%, US$ "+fmt(c.raw.y,1):"Hashprice: US$ "+fmt(c.raw.y,1)}}},
+        options:{animation:false,responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw.n?c.raw.n+": "+fmt(c.raw.x,1)+"%, US$ "+fmt(c.raw.y,1):"Hashprice: US$ "+fmt(c.raw.y,1)}}},
         scales:{x:{min:0,max:70,title:{display:true,text:"Utilização do contêiner (% do ano)",color:ink},ticks:{color:ink},grid:{color:grid}},y:{type:"logarithmic",min:20,max:2000,title:{display:true,text:"Hashprice de equilíbrio (US$/PH/dia)",color:ink},ticks:{color:ink,callback:v=>[20,50,100,200,500,1000,2000].includes(v)?v:""},grid:{color:grid}}}}});
       cv=new Chart($("cv"),{type:"line",data:{datasets:[{data:[],borderColor:css("--accent"),backgroundColor:css("--accent")+"22",fill:true,pointRadius:0,borderWidth:2},{type:"scatter",data:[],backgroundColor:css("--bad"),pointRadius:5}]},
-        options:{animation:false,maintainAspectRatio:false,parsing:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>usd(c.raw.x)+": "+fmt(c.raw.y)+" usinas"}}},
-        scales:{x:{type:"linear",min:40000,max:400000,title:{display:true,text:"Preço do bitcoin (US$)",color:ink},ticks:{color:ink,maxRotation:0,autoSkip:true,maxTicksLimit:8,callback:v=>fmt(v/1000)+" mil"},grid:{color:grid}},y:{min:0,max:U.length,title:{display:true,text:"Usinas com VPL positivo",color:ink},ticks:{color:ink},grid:{color:grid}}}}});
+        options:{animation:false,responsive:true,maintainAspectRatio:false,parsing:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>usd(c.raw.x)+" (hashprice US$ "+fmt(hpDe(c.raw.x),1)+"): "+fmt(c.raw.y)+" usinas"}}},
+        scales:{x:{type:"linear",min:40000,max:400000,title:{display:true,text:"Preço do bitcoin (US$), com dificuldade e taxas de 07/11",color:ink},ticks:{color:ink,maxRotation:0,autoSkip:true,maxTicksLimit:8,callback:v=>fmt(v/1000)+" mil"},grid:{color:grid}},x2:{type:"linear",position:"top",min:40000,max:400000,title:{display:true,text:"Hashprice equivalente (US$/PH/dia)",color:ink},ticks:{color:ink,maxRotation:0,autoSkip:true,maxTicksLimit:8,callback:v=>fmt(hpDe(v),0)},grid:{display:false}},y:{min:0,max:U.length,title:{display:true,text:"Usinas com VPL positivo",color:ink},ticks:{color:ink,callback:v=>fmt(v)},grid:{color:grid}}}}});
     }
     sc.data.datasets[0].data=pts(false); sc.data.datasets[1].data=pts(true); sc.data.datasets[2].data=[{x:0,y:hp},{x:70,y:hp}]; sc.update();
     const hs=ord.map(u=>u.hpe); const curve=[]; for(let b=40000;b<=400000;b+=2500){const h=hpDe(b); let n=0; while(n<hs.length&&hs[n]<=h) n++; curve.push({x:b,y:n});}

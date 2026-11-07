@@ -2,7 +2,7 @@ import pandas as pd, numpy as np, json, copy, sys
 sys.path.insert(0,"."); import pipeline as P
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 b=pd.read_csv("usinas_painel.csv"); HPW=35.4377
-REF_HP,REF_BTC=36.538,77822
+REF_HP,REF_BTC=32.31,75799
 btc=lambda hp: REF_BTC*hp/REF_HP
 # hp_eq no cenario combinado (usado+infra125+12%) com halving
 p=copy.deepcopy(P.PARAM); p.update(infra_usd_mw=125000,taxa_desconto=.12); a=dict(p["asics"]["S19j XP"]); a["usd_th"]=3
@@ -29,9 +29,10 @@ xs=np.arange(40000,400001,2500); fig,ax=plt.subplots(figsize=(8,3.6))
 for cap,c in [(1,"#0f7a5c"),(5,"#1f6fb2"),(10,"#6b4fa3")]:
     h=np.sort(b[b.cap_mw==cap].hp_eq_com_halving.values); ax.plot(xs/1000,[np.searchsorted(h,x*REF_HP/REF_BTC,side="right") for x in xs],c=c,lw=1.8,label=f"{cap} MW, premissas base")
 h=np.sort(b[b.cap_mw==1].hp_eq_comb_halv.values); ax.plot(xs/1000,[np.searchsorted(h,x*REF_HP/REF_BTC,side="right") for x in xs],c="#0f7a5c",ls="--",lw=1.5,label="1 MW, ASIC usado + infra barata + 12%")
-ax.axvline(75.7,color="#b4442c",lw=1); ax.text(78,1080,"BTC em 07/11/2026",fontsize=7,color="#b4442c")
-ax.set_xlabel("Preço do bitcoin (US$ mil), dificuldade fixa",fontsize=8); ax.set_ylabel("Usinas com VPL positivo",fontsize=8); ax.set_ylim(0,1200)
-ax.set_title("Quantas usinas fecham a conta a cada preço do bitcoin (com halving)",fontsize=9); ax.legend(fontsize=7,frameon=False); ax.tick_params(labelsize=7); ax.spines[["top","right"]].set_visible(False)
+ax.axvline(75.8,color="#b4442c",lw=1); ax.text(78,600,"BTC em\n07/11/2026",fontsize=7,color="#b4442c")
+sec=ax.secondary_xaxis("top",functions=(lambda x:x*1000*REF_HP/REF_BTC,lambda h:h*REF_BTC/REF_HP/1000)); sec.set_xlabel("Hashprice equivalente (US$/PH/dia), dificuldade e taxas de 07/11/2026",fontsize=7); sec.tick_params(labelsize=7)
+ax.set_xlabel("Preço do bitcoin (US$ mil), ceteris paribus: o que importa é o hashprice no eixo de cima",fontsize=8); ax.set_ylabel("Usinas com VPL positivo",fontsize=8); ax.set_ylim(0,1200)
+ax.set_title("Quantas usinas fecham a conta a cada nível de hashprice (com halving)",fontsize=9,pad=26); ax.legend(fontsize=7,frameon=False,loc="lower right"); ax.tick_params(labelsize=7); ax.spines[["top","right"]].set_visible(False)
 plt.tight_layout(); plt.savefig("g_curva.png",dpi=200); plt.close()
 # grafico 3 conciliacao mensal
 M=pd.read_csv("auditoria/2_conciliacao_mensal.csv").dropna(); M=M.groupby("mes")[["TWh_nosso_corte_oficial","TWh_GNR_apurada_ONS_conjuntos"]].sum()
